@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BikePool - Share Your Ride</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">BikePool</div>
+        <div class="nav-links">
+            <a href="#" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#rides"><i class="fas fa-search"></i> Find Rides</a>
+            <a href="#offer"><i class="fas fa-plus-circle"></i> Offer Ride</a>
+            <a href="#login" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="#signup" class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>Share Your Ride, Save the Planet</h1>
+            <p>Find or offer bike rides in your area</p>
+            <div class="search-container">
+                <div class="search-input-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" placeholder="From" id="from">
+                </div>
+                <div class="search-input-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" placeholder="To" id="to">
+                </div>
+                <div class="search-input-group">
+                    <i class="fas fa-calendar"></i>
+                    <input type="date" id="date">
+                </div>
+                <button class="search-btn">
+                    <i class="fas fa-search"></i> Search Rides
+                </button>
+            </div>
+        </section>
+
+        <section id="rides" class="rides-section">
+            <h2 class="section-title">Available Rides</h2>
+            <div class="rides-container" id="ridesList">
+                <!-- Rides will be populated here -->
+            </div>
+        </section>
+
+        <section id="offer" class="offer-section">
+            <h2 class="section-title">Offer a Ride</h2>
+            <form id="offerRideForm" class="offer-form">
+                <div class="form-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" name="from" placeholder="From" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" name="to" placeholder="To" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-calendar"></i>
+                    <input type="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-clock"></i>
+                    <input type="time" name="time" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-chair"></i>
+                    <input type="number" name="seats" placeholder="Available Seats" min="1" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-rupee-sign"></i>
+                    <input type="number" name="price" placeholder="Price per Seat (₹)" min="0" required>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-plus-circle"></i> Offer Ride
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" name="phone" placeholder="Phone Number" required>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About BikePool</h3>
+                <p>Share rides, save money, and help the environment.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#rides">Find Rides</a>
+                <a href="#offer">Offer Ride</a>
+                <a href="#login">Login</a>
+                <a href="#signup">Sign Up</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> support@bikepool.com</p>
+                <p><i class="fas fa-phone"></i> +91 1234567890</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BikePool. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 
