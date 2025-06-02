@@ -1,6 +1,7 @@
 // DOM Elements
 const loginModal = document.getElementById('loginModal');
 const signupModal = document.getElementById('signupModal');
+const offerRideModal = document.getElementById('offerRideModal');
 const loginBtn = document.querySelector('.login-btn');
 const signupBtn = document.querySelector('.signup-btn');
 const closeBtns = document.querySelectorAll('.close');
@@ -9,6 +10,11 @@ const ridesList = document.getElementById('ridesList');
 const offerRideForm = document.getElementById('offerRideForm');
 const loginForm = document.getElementById('loginForm');
 const signupForm = document.getElementById('signupForm');
+
+// API Configuration
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api'
+    : '/api';
 
 // Modal Event Listeners
 loginBtn.addEventListener('click', () => {
@@ -19,21 +25,28 @@ signupBtn.addEventListener('click', () => {
     signupModal.style.display = 'block';
 });
 
+const offerRideBtn = document.querySelector('.offer-ride-btn');
+if (offerRideBtn) {
+    offerRideBtn.addEventListener('click', () => {
+        offerRideModal.style.display = 'block';
+    });
+}
+
 closeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         loginModal.style.display = 'none';
         signupModal.style.display = 'none';
+        if (offerRideModal) offerRideModal.style.display = 'none';
     });
 });
 
 window.addEventListener('click', (e) => {
     if (e.target === loginModal) loginModal.style.display = 'none';
     if (e.target === signupModal) signupModal.style.display = 'none';
+    if (offerRideModal && e.target === offerRideModal) offerRideModal.style.display = 'none';
 });
 
 // API Functions
-const API_URL = 'http://localhost:3000/api';
-
 async function searchRides(from, to, date) {
     try {
         if (!from || !to || !date) {
@@ -78,7 +91,7 @@ async function offerRide(rideData) {
         if (result.success) {
             alert('Ride offered successfully!');
             offerRideForm.reset();
-            // Optionally refresh the rides list
+            if (offerRideModal) offerRideModal.style.display = 'none';
             searchRides('', '', '');
         }
     } catch (error) {
@@ -94,7 +107,8 @@ async function login(credentials) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify(credentials),
+            credentials: 'include'
         });
 
         const data = await response.json();
@@ -109,6 +123,7 @@ async function login(credentials) {
             loginModal.style.display = 'none';
             updateUI();
             alert('Login successful!');
+            window.location.reload();
         }
     } catch (error) {
         console.error('Error logging in:', error);
@@ -123,7 +138,8 @@ async function signup(userData) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(userData),
+            credentials: 'include'
         });
 
         const data = await response.json();
@@ -136,6 +152,7 @@ async function signup(userData) {
             alert('Signup successful! Please login.');
             signupModal.style.display = 'none';
             loginModal.style.display = 'block';
+            signupForm.reset();
         }
     } catch (error) {
         console.error('Error signing up:', error);
@@ -151,19 +168,24 @@ function displayRides(rides) {
         return;
     }
 
+    const displayedRideIds = new Set();
+
     rides.forEach(ride => {
-        const rideCard = document.createElement('div');
-        rideCard.className = 'ride-card';
-        rideCard.innerHTML = `
-            <h3>${ride.startLocation} to ${ride.endLocation}</h3>
-            <p>Date: ${new Date(ride.date).toLocaleDateString()}</p>
-            <p>Time: ${ride.time}</p>
-            <p>Available Seats: ${ride.availableSeats}</p>
-            <p>Price: ₹${ride.price}</p>
-            <p>Driver: ${ride.driver ? ride.driver.name : 'Unknown'}</p>
-            <button onclick="bookRide('${ride._id}')" class="book-btn">Book Ride</button>
-        `;
-        ridesList.appendChild(rideCard);
+        if (!displayedRideIds.has(ride._id)) {
+            const rideCard = document.createElement('div');
+            rideCard.className = 'ride-card';
+            rideCard.innerHTML = `
+                <h3>${ride.startLocation} to ${ride.endLocation}</h3>
+                <p>Date: ${new Date(ride.date).toLocaleDateString()}</p>
+                <p>Time: ${ride.time}</p>
+                <p>Available Seats: ${ride.availableSeats}</p>
+                <p>Price: ₹${ride.price}</p>
+                <p>Driver: ${ride.driver ? ride.driver.name : 'Unknown'}</p>
+                <button onclick="bookRide('${ride._id}')" class="book-btn">Book Ride</button>
+            `;
+            ridesList.appendChild(rideCard);
+            displayedRideIds.add(ride._id);
+        }
     });
 }
 
@@ -172,11 +194,9 @@ function updateUI() {
     const navLinks = document.querySelector('.nav-links');
     
     if (user) {
-        // Hide login/signup buttons
         loginBtn.style.display = 'none';
         signupBtn.style.display = 'none';
         
-        // Add user profile and logout buttons
         const userProfile = document.createElement('a');
         userProfile.href = '#';
         userProfile.textContent = `Welcome, ${user.name}`;
@@ -243,7 +263,6 @@ signupForm.addEventListener('submit', (e) => {
     signup(userData);
 });
 
-// Add bookRide function
 async function bookRide(rideId) {
     try {
         const token = localStorage.getItem('token');
@@ -263,11 +282,10 @@ async function bookRide(rideId) {
         const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(data.message || 'Failed to book ride');
+            throw new Error(data.error || data.message || 'Failed to book ride');
         }
 
-        alert('Ride booked successfully!');
-        // Refresh the rides list
+        alert('your ride has been booked');
         const from = document.getElementById('from').value;
         const to = document.getElementById('to').value;
         const date = document.getElementById('date').value;
@@ -278,5 +296,4 @@ async function bookRide(rideId) {
     }
 }
 
-// Initialize UI
 updateUI(); 

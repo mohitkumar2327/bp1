@@ -89,10 +89,10 @@ router.post('/:rideId/book', auth, async (req, res) => {
         ride.availableSeats -= 1;
         await ride.save();
 
-        res.json({ success: true, message: 'Ride booked successfully' });
+        res.json({ success: true, message: 'your ride has been booked' });
     } catch (error) {
         console.error('Book ride error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
 
